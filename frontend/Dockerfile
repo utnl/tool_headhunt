@@ -6,12 +6,14 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Stage 2: Runner (Chỉ lấy phần đã build)
+# Stage 2: Runner
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV production
 
-# Copy file từ builder sang
+# 👇 THÊM DÒNG NÀY QUAN TRỌNG 👇
+ENV HOSTNAME="0.0.0.0" 
+
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
