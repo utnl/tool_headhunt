@@ -3,8 +3,8 @@ import { useState, useRef } from "react";
 
 // --- CẤU HÌNH API URL ---
 // Lấy từ biến môi trường, nếu không có thì mặc định là localhost:8000
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
+// const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE="";
 type Box = {
   id: number;
   x: number;
