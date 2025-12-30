@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 // --- CẤU HÌNH API ---
 // - Local: Đọc từ .env.local (http://localhost:8000)
 // - Production: Rỗng "" (để Nginx tự điều hướng)
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || ""; 
+const API_BASE =""; 
 
 type Box = {
   id: number;
