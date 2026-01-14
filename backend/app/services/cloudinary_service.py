@@ -1,4 +1,6 @@
 import os
+import re
+import unicodedata
 import cloudinary
 import cloudinary.uploader
 from dotenv import load_dotenv
@@ -15,6 +17,23 @@ cloudinary.config(
     secure=True
 )
 
+def slugify(text: str) -> str:
+    """
+    Chuyển đổi tên tiếng Việt thành slug an toàn cho URL/filename
+    Ví dụ: "Nguyễn Văn A - CV.pdf" -> "nguyen-van-a-cv"
+    """
+    # Chuẩn hóa Unicode (NFD) và loại bỏ dấu
+    text = unicodedata.normalize('NFD', text)
+    text = ''.join(char for char in text if unicodedata.category(char) != 'Mn')
+    
+    # Chuyển thường và thay khoảng trắng bằng dấu gạch ngang
+    text = text.lower().strip()
+    text = re.sub(r'[^\w\s-]', '', text)  # Loại bỏ ký tự đặc biệt
+    text = re.sub(r'[\s_-]+', '-', text)  # Thay khoảng trắng bằng -
+    text = re.sub(r'^-+|-+$', '', text)   # Loại bỏ - ở đầu/cuối
+    
+    return text or "untitled"
+
 def upload_cv(file_bytes: bytes, filename: str) -> dict:
     """
     Upload CV file to Cloudinary
@@ -29,14 +48,15 @@ def upload_cv(file_bytes: bytes, filename: str) -> dict:
     # Generate unique folder path by date
     date_folder = datetime.now().strftime("%Y/%m")
     
-    # Remove extension for public_id
+    # Chuẩn hóa tên file tiếng Việt
     name_without_ext = os.path.splitext(filename)[0]
+    safe_name = slugify(name_without_ext)
     
     try:
         result = cloudinary.uploader.upload(
             file_bytes,
             folder=f"cvs/{date_folder}",
-            public_id=f"{name_without_ext}_{datetime.now().strftime('%H%M%S')}",
+            public_id=f"{safe_name}_{datetime.now().strftime('%H%M%S')}",
             resource_type="raw",  # For PDF files
             format="pdf"
         )
