@@ -66,11 +66,11 @@ export default function CvRedactorPage() {
       if (res.ok) {
         const data = await res.json();
         setCloudinaryUrl(data.url);
-        console.log("✅ Uploaded to Cloudinary:", data.url);
+        console.log("✅:");
         return data;
       }
     } catch (e) {
-      console.error("Lỗi upload Cloudinary:", e);
+      console.error("Lỗi:", e);
     }
     return null;
   };
