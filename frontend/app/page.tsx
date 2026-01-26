@@ -16,10 +16,13 @@ export default function Home() {
           </div>
         </Link>
 
-        {/* Placeholder cho Tool 2 sau này */}
-        <div className="border border-dashed border-gray-300 p-6 rounded-xl flex items-center justify-center text-gray-400">
-          Coming Soon: PDF Merger...
-        </div>
+        {/* Card cho Tool 2: HTML to PDF */}
+        <Link href="/tools/html-to-pdf" className="group">
+          <div className="border border-gray-200 p-6 rounded-xl hover:shadow-xl transition-all cursor-pointer bg-gray-50 hover:bg-white">
+            <h2 className="text-2xl font-bold mb-2 group-hover:text-green-600">📄 HTML to PDF</h2>
+            <p className="text-gray-600">Chuyển đổi file HTML thành PDF cuộn vô hạn (1 trang dài).</p>
+          </div>
+        </Link>
       </div>
     </main>
   );
