@@ -158,7 +158,8 @@ def process_cv(input_bytes):
         # TỐI ƯU HIỆU NĂNG: Thêm images=0 (fitz.PDF_REDACT_IMAGE_NONE) để tránh PyMuPDF xử lý lại ảnh nền, giúp tốc độ tăng gấp nhiều lần
         page.apply_redactions(images=0)
     
-    return doc.tobytes()
+    # TỐI ƯU DUNG LƯỢNG: dọn dẹp các object thừa và nén file lại
+    return doc.tobytes(garbage=4, deflate=True)
 
 # ==========================================
 # PHẦN 4: CÁC HÀM MANUAL (KHÔNG ĐƯỢC XÓA)
@@ -271,4 +272,5 @@ def process_manual(input_bytes, boxes, color_hex, snapping=True):
         page.add_redact_annot(final_rect, fill=user_fill_color)
 
     for page in doc: page.apply_redactions(images=0)
-    return doc.tobytes()
+    # TỐI ƯU DUNG LƯỢNG: dọn dẹp các object thừa và nén file lại
+    return doc.tobytes(garbage=4, deflate=True)
