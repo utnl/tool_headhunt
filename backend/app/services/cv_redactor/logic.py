@@ -129,7 +129,8 @@ def process_cv(input_bytes):
     for page_num, page in enumerate(doc):
         if page_num > 0: break 
         page_width = page.rect.width
-        drawings_rects = [path["rect"] for path in page.get_drawings()]
+        # TỐI ƯU HIỆU NĂNG: Bỏ qua get_drawings() vì các CV (như Canva) có hàng vạn vector nhỏ sẽ làm server treo/lag rất lâu.
+        drawings_rects = [] 
         images_rects = [fitz.Rect(img["bbox"]) for img in page.get_image_info()]
         blocks = page.get_text("dict")["blocks"]
 
@@ -154,7 +155,8 @@ def process_cv(input_bytes):
                 mask_rect = fitz.Rect(rect.x0 - 2, rect.y0 - 1, rect.x1 + PADDING_RIGHT, rect.y1 + 1)
                 page.add_redact_annot(mask_rect, fill=bg_color)
 
-        page.apply_redactions()
+        # TỐI ƯU HIỆU NĂNG: Thêm images=0 (fitz.PDF_REDACT_IMAGE_NONE) để tránh PyMuPDF xử lý lại ảnh nền, giúp tốc độ tăng gấp nhiều lần
+        page.apply_redactions(images=0)
     
     return doc.tobytes()
 
@@ -268,5 +270,5 @@ def process_manual(input_bytes, boxes, color_hex, snapping=True):
         # 2. TÔ MÀU (Dùng tuple đã chuyển đổi)
         page.add_redact_annot(final_rect, fill=user_fill_color)
 
-    for page in doc: page.apply_redactions()
+    for page in doc: page.apply_redactions(images=0)
     return doc.tobytes()
